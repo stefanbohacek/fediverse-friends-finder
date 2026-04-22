@@ -22,7 +22,9 @@
   <nav id="user-nav"
     class="d-none position-fixed top-0 end-0 m-3 bg-body border rounded shadow-sm px-3 py-2 z-1"
     aria-label="Session actions">
-    <a href="#" id="refresh-link" class="nav-link p-0 small">Refresh</a>
+    <a href="#"
+      id="refresh-link"
+      class="nav-link p-0 small">Refresh</a>
   </nav>
 
   <main id="main"
@@ -115,8 +117,22 @@
   <script type="module"
     src="js/main.js"></script>
   <!-- Matomo -->
-
+  <script>
+    var _paq = window._paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(["setExcludedQueryParams", ["token"]]);
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function () {
+      var u = "//matomo.stefanbohacek.com/";
+      _paq.push(['setTrackerUrl', u + 'matomo.php']);
+      _paq.push(['setSiteId', '35']);
+      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+    })();
+  </script>
   <!-- End Matomo Code -->
+
 </body>
 
 </html>
