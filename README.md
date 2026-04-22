@@ -6,4 +6,19 @@ Find the people you know who have already joined the fediverse.
 
 Learn more at [jointhefediverse.net](https://jointhefediverse.net/).
 
-Fediverse domain list downloaded from [fedilist.com](https://fedilist.com/).
+## Development
+
+This is a simple HTML+JS+CSS website with no dependencies and no build script.
+
+To run it locally, you can use the built-in local server in PHP, Python, or any other language that supports it.
+
+```sh
+# with PHP
+php -S localhost:8080
+
+# with Python 3
+python -m http.server
+```
+## Acknowledgements
+
+- Fediverse domain list was downloaded from [fedilist.com](https://fedilist.com/).
