@@ -1,0 +1,147 @@
+/* Adapted from Happy Hues: https://www.happyhues.co/palettes/12 */
+
+:root {
+  --hh-bg: #d4d8f0;
+  --hh-surface: #b8c1ec;
+  --hh-card-bg: #fffffe;
+  --hh-headline: #232946;
+  --hh-body: #232946;
+  --hh-accent: #ef4565;
+  --hh-accent-fg: #232946;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hh-bg: #232946;
+    --hh-surface: #b8c1ec;
+    --hh-card-bg: color-mix(in srgb, var(--hh-surface) 8%, var(--hh-bg));
+    --hh-headline: #fffffe;
+    --hh-body: #b8c1ec;
+    --hh-accent: #eebbc3;
+    --hh-accent-fg: #232946;
+    --bs-body-bg: #232946;
+    --bs-body-color: #b8c1ec;
+    --bs-secondary-color: rgba(184, 193, 236, 0.65);
+    --bs-secondary-rgb: 184, 193, 236;
+    --bs-border-color: rgba(184, 193, 236, 0.2);
+    --bs-tertiary-bg: color-mix(in srgb, #b8c1ec 12%, #232946);
+  }
+}
+
+html,
+body {
+  min-height: 100vh;
+  background-color: var(--hh-bg);
+  color: var(--hh-body);
+  font-family:
+    Avenir, Montserrat, Corbel, "URW Gothic", source-sans-pro, sans-serif;
+  font-weight: normal;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.fs-1,
+strong {
+  color: var(--hh-headline);
+}
+
+a,
+a:visited {
+  color: var(--hh-accent);
+  text-decoration-color: currentColor;
+}
+
+a.btn-primary:visited {
+  color: #fffffe;
+}
+
+@media (prefers-color-scheme: dark) {
+  a.btn-primary:visited {
+    color: var(--hh-accent-fg);
+  }
+}
+
+a:hover,
+a:focus {
+  color: var(--hh-headline);
+  text-decoration-color: var(--hh-headline);
+}
+
+.card {
+  --bs-card-bg: var(--hh-card-bg);
+  --bs-card-border-color: color-mix(in srgb, var(--hh-surface) 50%, transparent);
+  --bs-card-color: var(--hh-body);
+}
+
+.btn-primary {
+  background-color: var(--hh-accent);
+  border-color: var(--hh-accent);
+  color: #fffffe;
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn-primary {
+    color: var(--hh-accent-fg);
+  }
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: var(--hh-headline);
+  border-color: var(--hh-headline);
+  color: var(--hh-card-bg);
+}
+
+
+.at-prefix {
+  background-color: var(--hh-card-bg);
+  border-color: var(--bs-border-color);
+  color: var(--hh-body);
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+}
+
+.avatar-placeholder {
+  width: 48px;
+  height: 48px;
+  background-color: var(--hh-surface);
+  opacity: 0.5;
+}
+
+.fediverse-badge {
+  background-color: #6364ff;
+  color: #fff !important;
+}
+
+.fediverse-badge:hover {
+  background-color: #4c4dcc;
+  color: #fff !important;
+}
+
+.server-badge {
+  background-color: var(--hh-surface);
+  color: var(--hh-accent-fg);
+  font-size: 0.85em;
+}
+
+
+.min-w-0 {
+  min-width: 0;
+}

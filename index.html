@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+  <title>Fediverse Friend Finder</title>
+  <meta name="description"
+    content="Find which Bluesky accounts you follow are also on Mastodon or the fediverse.">
+  <meta name="fediverse:creator"
+    content="@stefan@stefanbohacek.online" />
+  <meta property="og:image"
+    content="https://friends.jointhefediverse.net/images/fediverse.png" />
+  <link href="libs/bootstrap/5.3.8/css/bootstrap.min.css"
+    rel="stylesheet">
+  <link href="css/styles.css"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <nav id="user-nav"
+    class="d-none position-fixed top-0 end-0 m-3 bg-body border rounded shadow-sm px-3 py-2 z-1"
+    aria-label="Session actions">
+    <a href="#" id="refresh-link" class="nav-link p-0 small">Refresh</a>
+  </nav>
+
+  <main id="main"
+    class="container py-5">
+
+    <div class="row justify-content-center mb-5 mt-4 mt-lg-0">
+      <div class="col-12 col-md-9 col-lg-7">
+        <h1 class="fw-bold mb-3 text-center">Find your friends in the fediverse!</h1>
+        <form id="find-form"
+          novalidate>
+          <label for="handle-input"
+            class="form-label mt-4 mb-2">Enter your Atmosphere account handle</label>
+          <div class="input-group input-group-lg">
+            <span class="input-group-text at-prefix fw-semibold">@</span>
+            <input type="text"
+              id="handle-input"
+              class="form-control"
+              placeholder="username.bsky.social"
+              aria-label="Your Atmosphere handle"
+              autocapitalize="off" />
+            <button type="submit"
+              class="btn btn-primary px-4">Find</button>
+          </div>
+          <div class="form-text mt-2">Most likely your Bluesky username. Blacksky, Eurosky, and other Atmosphere
+            apps are also supported.</div>
+        </form>
+
+        <div id="error-alert"
+          class="alert alert-danger mt-3 d-none"
+          role="alert"></div>
+      </div>
+    </div>
+
+    <div id="loading-section"
+      class="row justify-content-center mb-5 d-none">
+      <div class="col-auto text-center">
+        <div class="spinner-border mb-3"
+          role="status"
+          aria-label="Loading"></div>
+        <p id="loading-status"
+          class="mb-0">Loading…</p>
+      </div>
+    </div>
+
+    <div id="results-section"
+      class="d-none">
+
+      <div class="row justify-content-center mb-4">
+        <div class="col-12 col-lg-11">
+          <div class="card">
+            <div class="card-body">
+              <p id="summary-text"
+                class="mb-0 fs-5"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+
+        <div class="col-12 col-lg-7 mb-4">
+          <h2 class="fw-bold mb-3">Fediverse accounts</h2>
+          <div id="accounts-list"></div>
+        </div>
+
+        <div class="col-12 col-lg-4 mb-4 sticky-lg-top align-self-start"
+          style="top: 1.5rem;">
+
+          <div class="mb-5">
+            <h2 class="fw-bold mb-3">Servers</h2>
+            <div id="servers-list"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="mt-auto py-3">
+    <div class="container text-center">
+      <p class="mb-0">Made by <a href="https://stefanbohacek.online/@stefan"
+          rel="me">@stefan</a> (<a href="https://github.com/stefanbohacek/fediverse-friends-finder/tree/main">view
+          source</a>).
+        <a href="https://mastodon.jointhefediverse.net/">Join Mastodon.</a>
+      </p>
+    </div>
+  </footer>
+
+  <script type="module"
+    src="js/main.js"></script>
+  <!-- Matomo -->
+
+  <!-- End Matomo Code -->
+</body>
+
+</html>
