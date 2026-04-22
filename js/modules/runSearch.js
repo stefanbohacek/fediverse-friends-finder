@@ -42,7 +42,7 @@ export default async (handle, { force = false } = {}) => {
     const results = processFollows(follows);
 
     loadingSection.classList.add("d-none");
-    renderResults(follows.length, results, cachedAt);
+    await renderResults(follows.length, results, cachedAt);
     resultsSection.classList.remove("d-none");
     userNav.classList.remove("d-none");
     resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });

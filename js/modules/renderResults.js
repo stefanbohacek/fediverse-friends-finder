@@ -1,4 +1,5 @@
 import { escapeHTML, truncate, timeAgo } from "./utils.js";
+import getFediverseDomains from "./fediverseDomains.js";
 
 const avatarHtml = (src, alt, cls) => {
   if (src) {
@@ -10,17 +11,20 @@ const avatarHtml = (src, alt, cls) => {
   return /* html */ `<div class="${cls} avatar-placeholder rounded-circle flex-shrink-0" aria-hidden="true"></div>`;
 };
 
-const buildUserCard = (user) => {
+const buildUserCard = (user, knownDomains) => {
   const div = document.createElement("div");
   div.className = "card mb-3";
 
   const badges = user.fediverseHandles
-    .map(
-      (a) => /* html */ `
+    .map((a) => {
+      const known = knownDomains.has(a.server);
+      const cls = known ? "fediverse-badge" : "fediverse-badge-muted";
+      const indicator = known ? "" : ` <span aria-hidden="true">❓</span>`;
+      return /* html */ `
         <a href="${escapeHTML(a.url)}" target="_blank" rel="noopener noreferrer"
-          class="fediverse-badge badge rounded-pill me-1 mb-1 text-wrap text-break">${escapeHTML(a.fullHandle)}</a>
-      `,
-    )
+          class="${cls} badge rounded-pill me-1 mb-1 text-wrap text-break">${escapeHTML(a.fullHandle)}${indicator}</a>
+      `;
+    })
     .join("");
 
   const bio = user.description
@@ -45,11 +49,12 @@ const buildUserCard = (user) => {
   return div;
 };
 
-export default (
+export default async (
   totalFollows,
   { fediverseAccounts, serverCounts },
   cachedAt,
 ) => {
+  const knownDomains = await getFediverseDomains();
   const cacheNote = cachedAt
     ? ` <small class="text-muted">(cached ${timeAgo(cachedAt)})</small>`
     : "";
@@ -66,7 +71,7 @@ export default (
     accountsList.innerHTML = /* html */ `<p class="text-muted">No fediverse accounts found among your follows.</p>`;
   } else {
     const frag = document.createDocumentFragment();
-    for (const user of fediverseAccounts) frag.appendChild(buildUserCard(user));
+    for (const user of fediverseAccounts) frag.appendChild(buildUserCard(user, knownDomains));
     accountsList.appendChild(frag);
   }
 
