@@ -18,7 +18,7 @@ const buildUserCard = (user, knownDomains) => {
   const badges = user.fediverseHandles
     .map((a) => {
       const known = knownDomains.has(a.server);
-      const cls = known ? "fediverse-badge" : "fediverse-badge-muted";
+      const cls = known ? "fediverse-badge" : "fediverse-badge-muted unknown-domain";
       const indicator = known ? "" : ` <span aria-hidden="true">❓</span>`;
       return /* html */ `
         <a href="${escapeHTML(a.url)}" target="_blank" rel="noopener noreferrer"
@@ -83,11 +83,12 @@ export default async (
   } else {
     const frag = document.createDocumentFragment();
     for (const [server, count] of sorted) {
+      const known = knownDomains.has(server);
       const row = document.createElement("div");
-      row.className = "d-flex justify-content-between align-items-center mb-2";
+      row.className = `d-flex justify-content-between align-items-center mb-2${known ? "" : " unknown-domain"}`;
       row.innerHTML = /* html */ `
         <a href="https://${escapeHTML(server)}" target="_blank" rel="noopener noreferrer"
-          class="text-break me-2">${escapeHTML(server)}</a>
+          class="text-break me-2">${escapeHTML(server)}${known ? "" : ` <span aria-hidden="true">❓</span>`}</a>
         <span class="badge server-badge rounded-pill">${count}</span>
       `;
       frag.appendChild(row);

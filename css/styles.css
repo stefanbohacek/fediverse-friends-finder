@@ -138,11 +138,14 @@ a:focus {
 .fediverse-badge-muted {
   background-color: var(--hh-surface);
   color: var(--hh-accent-fg);
+}
+
+.unknown-domain {
   filter: grayscale(1);
   opacity: 0.5;
 }
 
-.fediverse-badge-muted:hover {
+.unknown-domain:hover {
   opacity: 0.8;
 }
 
