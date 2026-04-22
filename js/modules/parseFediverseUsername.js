@@ -32,6 +32,9 @@ const SKIP_DOMAINS = [
   "tangled.org",
   "tangled.sh",
   "medium.com",
+  "truthsocial.com",
+  "foundation.app",
+  "bsky.directory",
 ];
 
 const MENTION_REGEX = /@([\w.-]+)@([\w-]+\.[\w.]+)/g;
