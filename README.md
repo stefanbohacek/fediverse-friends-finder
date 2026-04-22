@@ -5,3 +5,5 @@
 Find the people you know who have already joined the fediverse.
 
 Learn more at [jointhefediverse.net](https://jointhefediverse.net/).
+
+Fediverse domain list downloaded from [fedilist.com](https://fedilist.com/).
