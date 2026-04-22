@@ -10,7 +10,12 @@ export default (follows) => {
     if (accounts.length > 0) {
       fediverseAccounts.push({ ...follow, fediverseHandles: accounts });
       for (const account of accounts) {
-        serverCounts.set(account.server, (serverCounts.get(account.server) ?? 0) + 1);
+        if (!account.bridged) {
+          serverCounts.set(
+            account.server,
+            (serverCounts.get(account.server) ?? 0) + 1,
+          );
+        }
       }
     }
   }

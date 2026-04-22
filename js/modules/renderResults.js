@@ -1,5 +1,6 @@
 import { escapeHTML, truncate, timeAgo } from "./utils.js";
 import getFediverseDomains from "./fediverseDomains.js";
+import { downloadCSV } from "./downloadCSV.js";
 
 const avatarHtml = (src, alt, cls) => {
   if (src) {
@@ -18,8 +19,19 @@ const buildUserCard = (user, knownDomains) => {
   const badges = user.fediverseHandles
     .map((a) => {
       const known = knownDomains.has(a.server);
-      const cls = known ? "fediverse-badge" : "fediverse-badge-muted unknown-domain";
-      const indicator = known ? "" : ` <span aria-hidden="true">❓</span>`;
+      const cls = known
+        ? "fediverse-badge"
+        : "fediverse-badge-muted unknown-domain";
+      const indicator =
+        known || a.bridged ? "" : ` <span aria-hidden="true">❓</span>`;
+      const bridge = a.bridged
+        ? ` <span aria-label="bridge" title="Followable via bridge">🌉</span>`
+        : "";
+      if (a.bridged) {
+        return /* html */ `
+          <span class="${cls} badge rounded-pill me-1 mb-1 text-wrap text-break">${escapeHTML(a.fullHandle)}${bridge}</span>
+        `;
+      }
       return /* html */ `
         <a href="${escapeHTML(a.url)}" target="_blank" rel="noopener noreferrer"
           class="${cls} badge rounded-pill me-1 mb-1 text-wrap text-break">${escapeHTML(a.fullHandle)}${indicator}</a>
@@ -71,8 +83,17 @@ export default async (
     accountsList.innerHTML = /* html */ `<p class="text-muted">No fediverse accounts found among your follows.</p>`;
   } else {
     const frag = document.createDocumentFragment();
-    for (const user of fediverseAccounts) frag.appendChild(buildUserCard(user, knownDomains));
+    for (const user of fediverseAccounts)
+      frag.appendChild(buildUserCard(user, knownDomains));
     accountsList.appendChild(frag);
+
+    const csvBtn = document.getElementById("download-csv-btn");
+    csvBtn.classList.remove("d-none");
+    const downloadAlert = document.getElementById("download-alert");
+    csvBtn.onclick = () => {
+      downloadCSV(fediverseAccounts);
+      downloadAlert.classList.remove("d-none");
+    };
   }
 
   const serversList = document.getElementById("servers-list");
@@ -95,5 +116,4 @@ export default async (
     }
     serversList.appendChild(frag);
   }
-
 };

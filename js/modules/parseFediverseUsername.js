@@ -1,3 +1,5 @@
+const BRIDGE_DOMAINS = new Set(["bsky.brid.gy", "ap.brid.gy"]);
+
 const SKIP_DOMAINS = [
   "bsky.app",
   "bsky.social",
@@ -51,13 +53,15 @@ export const parseBio = (bio) => {
         server,
         fullHandle,
         url: `https://${server}/@${user}`,
+        bridged: BRIDGE_DOMAINS.has(server),
       });
     }
   };
 
   for (const m of bio.matchAll(MENTION_REGEX)) {
-    if (!SKIP_DOMAINS.includes(m[2].toLowerCase())) {
-      addAccount(m[1], m[2]);
+    const domain = m[2].toLowerCase();
+    if (!SKIP_DOMAINS.includes(domain)) {
+      addAccount(m[1], domain);
     }
   }
 

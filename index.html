@@ -86,7 +86,16 @@
       <div class="row justify-content-center">
 
         <div class="col-12 col-lg-7 mb-4">
-          <h2 class="fw-bold mb-3">Fediverse accounts</h2>
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <h2 class="fw-bold mb-0">Fediverse accounts</h2>
+            <button id="download-csv-btn"
+              class="btn btn-sm btn-outline-secondary d-none">Download</button>
+          </div>
+          <div id="download-alert"
+            class="alert alert-info d-none"
+            role="alert">
+            You can import the download file on Mastodon via <strong>Preferences → Import and export → Import</strong>.
+          </div>
           <div id="accounts-list"></div>
         </div>
 

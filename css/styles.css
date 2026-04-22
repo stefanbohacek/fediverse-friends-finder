@@ -82,7 +82,11 @@ a:focus {
 
 .card {
   --bs-card-bg: var(--hh-card-bg);
-  --bs-card-border-color: color-mix(in srgb, var(--hh-surface) 50%, transparent);
+  --bs-card-border-color: color-mix(
+    in srgb,
+    var(--hh-surface) 50%,
+    transparent
+  );
   --bs-card-color: var(--hh-body);
 }
 
@@ -105,7 +109,6 @@ a:focus {
   border-color: var(--hh-headline);
   color: var(--hh-card-bg);
 }
-
 
 .at-prefix {
   background-color: var(--hh-card-bg);
@@ -155,7 +158,12 @@ a:focus {
   font-size: 0.85em;
 }
 
-
 .min-w-0 {
   min-width: 0;
+}
+
+#download-alert {
+  background-color: var(--hh-card-bg);
+  border-color: var(--bs-border-color);
+  color: var(--hh-body);
 }
