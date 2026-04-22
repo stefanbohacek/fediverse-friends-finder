@@ -27,6 +27,7 @@ const SKIP_DOMAINS = [
   "substack.com",
   "linktr.ee",
   "beacons.ai",
+  "tangled.org",
 ];
 
 const MENTION_REGEX = /@([\w.-]+)@([\w-]+\.[\w.]+)/g;
