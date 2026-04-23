@@ -1,45 +1,56 @@
 const BRIDGE_DOMAINS = new Set(["bsky.brid.gy", "ap.brid.gy"]);
 
 const SKIP_DOMAINS = [
-  "bsky.app",
-  "bsky.social",
+  "beacons.ai",
   "bluesky.com",
   "bluesky.social",
-  "twitter.com",
-  "x.com",
-  "t.co",
-  "instagram.com",
-  "facebook.com",
-  "threads.net",
-  "threads.com",
-  "github.com",
-  "gitlab.com",
+  "bsky.app",
+  "bsky.directory",
+  "bsky.social",
   "codeberg.org",
-  "linkedin.com",
-  "youtube.com",
-  "youtu.be",
-  "tiktok.com",
-  "vimeo.com",
-  "twitch.tv",
-  "reddit.com",
   "discord.com",
   "discord.gg",
+  "en.pronouns.page",
+  "facebook.com",
+  "fanme.link",
+  "foundation.app",
+  "fursona.directory",
+  "github.com",
+  "gitlab.com",
+  "instagram.com",
   "ko-fi.com",
-  "patreon.com",
-  "substack.com",
+  "linkedin.com",
   "linktr.ee",
-  "beacons.ai",
+  "medium.com",
+  "mixi.social",
+  "patreon.com",
+  "pixiv.net",
+  "pronouns.cc",
+  "pronouns.page",
+  "reddit.com",
+  "skeb.jp",
+  "substack.com",
+  "t.co",
   "tangled.org",
   "tangled.sh",
-  "medium.com",
+  "threads.com",
+  "threads.net",
+  "tiktok.com",
   "truthsocial.com",
-  "foundation.app",
-  "bsky.directory",
+  "twitch.tv",
+  "twitter.com",
+  "vimeo.com",
+  "wonderl.ink",
+  "x.com",
+  "youtu.be",
+  "youtube.com",
 ];
 
-const MENTION_REGEX = /@([\w.-]+)@([\w-]+\.[\w.]+)/g;
-const URL_REGEX =
-  /(?:https?:\/\/)?(?:www\.)?([\w-]+\.[\w.]+)\/(?:web\/)?@([\w][\w.-]*)/g;
+const skipDomain = (domain) =>
+  SKIP_DOMAINS.includes(domain.replace(/^www\./, ""));
+
+const MENTION_REGEX = /@([\w.-]+)@([\w-]+\.[\w.-]+)/g;
+const URL_PATTERN = /(?:https?:\/\/)?[\w-]+\.[\w.-]+\/(?:web\/)?@\S+/g;
 export const parseBio = (bio) => {
   if (!bio) {
     return { accounts: [] };
@@ -63,15 +74,22 @@ export const parseBio = (bio) => {
 
   for (const m of bio.matchAll(MENTION_REGEX)) {
     const domain = m[2].toLowerCase();
-    if (!SKIP_DOMAINS.includes(domain)) {
+    if (!skipDomain(domain)) {
       addAccount(m[1], domain);
     }
   }
 
-  for (const m of bio.matchAll(URL_REGEX)) {
-    const server = m[1].toLowerCase();
-    if (!SKIP_DOMAINS.includes(server)) {
-      addAccount(m[2], server);
+  for (const match of bio.matchAll(URL_PATTERN)) {
+    const raw = match[0].startsWith("http") ? match[0] : `https://${match[0]}`;
+    const url = URL.parse(raw);
+    if (!url) continue;
+    const m = url.pathname.match(
+      /^\/(?:web\/)?@([\w][\w.-]*)(?:@([\w-]+\.[\w.-]+))?/,
+    );
+    if (!m) continue;
+    const server = (m[2] || url.hostname).toLowerCase();
+    if (!skipDomain(server)) {
+      addAccount(m[1], server);
     }
   }
 

@@ -27,17 +27,11 @@ const buildUserCard = (user, knownDomains) => {
       const bridge = a.bridged
         ? ` <span aria-label="bridge" title="Followable via bridge">🌉</span>`
         : "";
-      if (a.bridged) {
-        return /* html */ `
-          <span class="${cls} badge rounded-pill me-1 mb-1 text-wrap text-break">${escapeHTML(a.fullHandle)}${bridge}</span>
-        `;
-      }
       return /* html */ `
         <a href="${escapeHTML(a.url)}"
           data-fediverse-handle="${escapeHTML(a.fullHandle)}"
-          data-default-url="${escapeHTML(a.url)}"
           target="_blank" rel="noopener noreferrer"
-          class="${cls} badge rounded-pill me-1 mb-1 text-wrap text-break">${escapeHTML(a.fullHandle)}${indicator}</a>
+          class="${cls} badge rounded-pill me-1 mb-1 text-wrap text-break">${escapeHTML(a.fullHandle)}${bridge}${indicator}</a>
       `;
     })
     .join("");
@@ -110,7 +104,14 @@ export default async (
     const server =
       serverInput.value.trim().replace(/\/+$/, "") || "mastodon.social";
     document.querySelectorAll("a[data-fediverse-handle]").forEach((a) => {
-      a.href = `https://${server}/${a.dataset.fediverseHandle}`;
+      const parts = a.dataset.fediverseHandle.split("@");
+      const user = parts[1];
+      const accountServer = parts[2];
+      const path =
+        server === accountServer
+          ? `@${user}`
+          : a.dataset.fediverseHandle;
+      a.href = `https://${server}/${path}`;
     });
   };
 
