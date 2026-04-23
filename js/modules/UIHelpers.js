@@ -5,7 +5,9 @@ export const setLoadingStatus = (message) => {
 export const setError = (message) => {
   const alert = document.getElementById("error-alert");
   if (message) {
-    alert.textContent = message;
+    alert.textContent = message.includes("Invalid handle")
+      ? "Please make sure to use your full username, eg. username.bsky.app."
+      : message;
     alert.classList.remove("d-none");
   } else {
     alert.classList.add("d-none");
