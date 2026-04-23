@@ -25,6 +25,7 @@ const SKIP_DOMAINS = [
   "manifold.xyz",
   "medium.com",
   "mixi.social",
+  "myhub.ai",
   "patreon.com",
   "pfq.link",
   "pixiv.net",
