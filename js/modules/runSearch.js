@@ -1,4 +1,4 @@
-import { resolveHandle, getFollowsCount, getAllFollows } from "./blueskyAPI.js";
+import { resolveHandle, getFollowsCount, getAllFollows } from "./bluesky.js";
 import { loadCache, saveCache } from "./cache.js";
 import processFollows from "./processFollows.js";
 import renderResults from "./renderResults.js";

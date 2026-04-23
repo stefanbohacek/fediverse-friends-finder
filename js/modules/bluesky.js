@@ -57,3 +57,42 @@ export const getAllFollows = async (actor, onProgress) => {
   } while (cursor);
   return follows;
 };
+
+const fetchDNSRecord = async (name, type) => {
+  const url = new URL("https://one.one.one.one/dns-query");
+  url.searchParams.set("name", name);
+  url.searchParams.set("type", type);
+
+  const response = await fetch(url, {
+    headers: {
+      accept: "application/dns-json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+const getDIDFromWellKnown = async (handle) => {
+  const response = await fetch(`https://${handle}/.well-known/atproto-did`);
+
+  if (!response.ok) {
+    throw new Error(`HTTP error: ${response.status}`);
+  }
+
+  return response.text();
+};
+
+export const getDID = async (handle) => {
+  const data = await fetchDNSRecord(`_atproto.${handle}`, "TXT");
+
+  const answer = data.Answer?.find((record) => record.data.startsWith('"did='));
+  if (answer) {
+    return answer.data.replace(/^"|"$/g, "").replace("did=", "");
+  }
+
+  return getDIDFromWellKnown(handle);
+};
