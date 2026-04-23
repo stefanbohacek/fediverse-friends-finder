@@ -83,7 +83,7 @@
         </div>
       </div>
 
-      <div class="row justify-content-center">
+      <div class="row justify-content-center mt-4">
 
         <div class="col-12 col-lg-7 mb-4">
           <div class="d-flex align-items-center gap-3 mb-3">
@@ -91,6 +91,19 @@
             <button id="download-csv-btn"
               class="btn btn-sm btn-outline-secondary d-none">Download</button>
           </div>
+          <label for="fediverse-server">
+            Your server
+          </label>
+          <div class="input-group mb-2 mt-0"
+            id="server-input-group">
+            <span class="input-group-text">https://</span>
+            <input type="text"
+              id="fediverse-server"
+              class="form-control"
+              placeholder="mastodon.social"
+              aria-describedby="server-info">
+          </div>
+          <div class="form-text mt-0 mb-4">Profiles below will open from your server.</div>
           <div id="download-alert"
             class="alert alert-info d-none"
             role="alert">

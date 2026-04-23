@@ -16,7 +16,7 @@ const buildUserCard = (user, knownDomains) => {
   const div = document.createElement("div");
   div.className = "card mb-3";
 
-  const badges = user.fediverseHandles
+  const profileLinks = user.fediverseHandles
     .map((a) => {
       const known = knownDomains.has(a.server);
       const cls = known
@@ -33,7 +33,10 @@ const buildUserCard = (user, knownDomains) => {
         `;
       }
       return /* html */ `
-        <a href="${escapeHTML(a.url)}" target="_blank" rel="noopener noreferrer"
+        <a href="${escapeHTML(a.url)}"
+          data-fediverse-handle="${escapeHTML(a.fullHandle)}"
+          data-default-url="${escapeHTML(a.url)}"
+          target="_blank" rel="noopener noreferrer"
           class="${cls} badge rounded-pill me-1 mb-1 text-wrap text-break">${escapeHTML(a.fullHandle)}${indicator}</a>
       `;
     })
@@ -52,7 +55,7 @@ const buildUserCard = (user, knownDomains) => {
           <a href="https://bsky.app/profile/${escapeHTML(user.handle)}" target="_blank"
             rel="noopener noreferrer" class="small link-secondary text-break">@${escapeHTML(user.handle)}</a>
         </div>
-        <div class="mb-1">${badges}</div>
+        <div class="mb-1">${profileLinks}</div>
         ${bio}
       </div>
     </div>
@@ -95,6 +98,32 @@ export default async (
       downloadAlert.classList.remove("d-none");
     };
   }
+
+  const serverInput = document.getElementById("fediverse-server");
+  const savedServer = localStorage.getItem("fediverseServer");
+
+  if (savedServer) {
+    serverInput.value = savedServer;
+  }
+
+  const updateProfileLinks = () => {
+    const server =
+      serverInput.value.trim().replace(/\/+$/, "") || "mastodon.social";
+    document.querySelectorAll("a[data-fediverse-handle]").forEach((a) => {
+      a.href = `https://${server}/${a.dataset.fediverseHandle}`;
+    });
+  };
+
+  serverInput.addEventListener("input", () => {
+    serverInput.value = serverInput.value.replace(/^https?:\/\//i, "");
+    localStorage.setItem(
+      "fediverseServer",
+      serverInput.value.trim().replace(/\/+$/, ""),
+    );
+    updateProfileLinks();
+  });
+
+  updateProfileLinks();
 
   const serversList = document.getElementById("servers-list");
   serversList.innerHTML = "";
