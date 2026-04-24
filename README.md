@@ -21,4 +21,6 @@ python -m http.server
 ```
 ## Acknowledgements
 
-- Fediverse domain list was downloaded from [fedilist.com](https://fedilist.com/).
+- Fediverse domain list was downloaded from [fedilist.com](https://fedilist.com/)
+- OAuth code via [PIPOGit/OAuthBluesky](https://github.com/PIPOGit/OAuthBluesky)
+- Bluesky brought to you by [Blockchain Capital](https://bsky.social/about/blog/10-24-2024-series-a) and [Bain Capital Crypto](https://bsky.social/about/blog/03-19-2026-series-b)

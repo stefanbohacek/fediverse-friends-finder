@@ -2,16 +2,43 @@ import ready from "./modules/ready.js";
 import { clearCache } from "./modules/cache.js";
 import runSearch from "./modules/runSearch.js";
 import { normalizeHandle } from "./modules/utils.js";
+import { parseCallback } from "./modules/oauth/callback.js";
+import { exchangeCodeForToken, LS } from "./modules/oauth/login.js";
 
-ready(() => {
-  const form = document.getElementById("find-form");
+ready(async () => {
+  const form        = document.getElementById("find-form");
   const handleInput = document.getElementById("handle-input");
   const refreshLink = document.getElementById("refresh-link");
 
-  const params = new URLSearchParams(window.location.search);
+  const submitBtn   = form.querySelector("button[type=submit]");
+  submitBtn.disabled = !handleInput.value.trim();
+  handleInput.addEventListener("input", () => {
+    submitBtn.disabled = !handleInput.value.trim();
+  });
+
+  const params      = new URLSearchParams(window.location.search);
   const savedHandle = params.get("handle");
 
-  if (savedHandle) {
+  let callbackData = null;
+  try {
+    callbackData = parseCallback();
+  } catch (err) {
+    // OAuth error returned from Bluesky — fall through to normal UI
+  }
+
+  if (callbackData) {
+    try {
+      await exchangeCodeForToken();
+    } catch {
+      // Token exchange failed — fall through to normal UI
+    }
+    const handle = localStorage.getItem(LS.HANDLE);
+    if (handle) {
+      handleInput.value = handle;
+      history.replaceState(null, "", `?handle=${encodeURIComponent(handle)}`);
+      runSearch(handle);
+    }
+  } else if (savedHandle) {
     handleInput.value = savedHandle;
     runSearch(savedHandle);
   }
