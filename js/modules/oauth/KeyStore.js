@@ -6,11 +6,11 @@ const KEY_ID     = "current";
 function openDB() {
     return new Promise((resolve, reject) => {
         const req = indexedDB.open(DB_NAME, DB_VERSION);
-        req.onupgradeneeded = (e) => {
-            e.target.result.createObjectStore(STORE_NAME);
+        req.onupgradeneeded = (ev) => {
+            ev.target.result.createObjectStore(STORE_NAME);
         };
-        req.onsuccess = (e) => resolve(e.target.result);
-        req.onerror   = (e) => reject(e.target.error);
+        req.onsuccess = (ev) => resolve(ev.target.result);
+        req.onerror   = (ev) => reject(ev.target.error);
     });
 }
 
@@ -20,7 +20,7 @@ export async function storeKey(cryptoKey, jwk) {
         const tx  = db.transaction(STORE_NAME, "readwrite");
         tx.objectStore(STORE_NAME).put({ cryptoKey, jwk }, KEY_ID);
         tx.oncomplete = () => resolve();
-        tx.onerror    = (e) => reject(e.target.error);
+        tx.onerror    = (ev) => reject(ev.target.error);
     });
 }
 
@@ -29,8 +29,8 @@ export async function loadKey() {
     return new Promise((resolve, reject) => {
         const tx  = db.transaction(STORE_NAME, "readonly");
         const req = tx.objectStore(STORE_NAME).get(KEY_ID);
-        req.onsuccess = (e) => resolve(e.target.result || null);
-        req.onerror   = (e) => reject(e.target.error);
+        req.onsuccess = (ev) => resolve(ev.target.result || null);
+        req.onerror   = (ev) => reject(ev.target.error);
     });
 }
 
@@ -40,6 +40,6 @@ export async function clearKey() {
         const tx = db.transaction(STORE_NAME, "readwrite");
         tx.objectStore(STORE_NAME).delete(KEY_ID);
         tx.oncomplete = () => resolve();
-        tx.onerror    = (e) => reject(e.target.error);
+        tx.onerror    = (ev) => reject(ev.target.error);
     });
 }
