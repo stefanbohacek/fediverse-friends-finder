@@ -41,7 +41,7 @@ export default async (handle, { force = false } = {}) => {
       setLoadingStatus("Resolving handle…");
       const did = await resolveHandle(handle);
 
-      if (!isLoggedIn() && await requiresAuth(did)) {
+      if (window.location.hostname !== "localhost" && !isLoggedIn() && await requiresAuth(did)) {
         loadingSection.classList.add("d-none");
         showSignInPrompt(handle);
         return;
