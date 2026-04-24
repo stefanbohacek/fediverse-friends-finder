@@ -19,7 +19,7 @@ export async function prepareDataForPARRequest(userHandle, clientId, callbackUrl
     let body = "response_type=code";
     body += "&prompt=login";
     body += "&code_challenge_method=S256";
-    body += "&scope=atproto+transition:generic";
+    body += "&scope=atproto";
     body += "&client_id="       + encodeURIComponent(clientId);
     body += "&redirect_uri="    + encodeURIComponent(callbackUrl);
     body += "&code_challenge="  + codeChallenge;
