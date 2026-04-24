@@ -1,5 +1,4 @@
 import sleep from "./sleep.js";
-import { isLoggedIn, authenticatedFetch, LS } from "./oauth/login.js";
 
 const API_BASE = "https://public.api.bsky.app/xrpc";
 
@@ -47,26 +46,15 @@ export const requiresAuth = async (actor) => {
 
 export const getAllFollows = async (actor, onProgress) => {
   const follows = [];
-  const authed  = isLoggedIn();
-  const pdsUrl  = authed && localStorage.getItem(LS.PDS_URL);
-  const base    = pdsUrl ? `${pdsUrl}/xrpc` : API_BASE;
   let cursor;
   do {
-    const url = new URL(`${base}/app.bsky.graph.getFollows`);
+    const url = new URL(`${API_BASE}/app.bsky.graph.getFollows`);
     url.searchParams.set("actor", actor);
     url.searchParams.set("limit", "100");
+    if (cursor) url.searchParams.set("cursor", cursor);
 
-    if (cursor) {
-      url.searchParams.set("cursor", cursor);
-    }
-
-    const resp = authed
-      ? await authenticatedFetch(url.toString())
-      : await fetch(url);
-
-    if (!resp.ok) {
-      throw new Error(`Failed to load follows (HTTP ${resp.status})`);
-    }
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`Failed to load follows (HTTP ${resp.status})`);
     const data = await resp.json();
 
     follows.push(...data.follows);
