@@ -94,26 +94,29 @@ async function step05PARRequest(parEndpoint, handle, redirectUri) {
     localStorage.setItem(LS.CODE_VERIFIER, codeVerifier);
     localStorage.setItem(LS.REDIRECT_URI,  redirectUri);
 
-    const dpopProof = await createDpopProof(parEndpoint, "POST");
+    for (let attempt = 0; attempt < 2; attempt++) {
+        const dpopProof = await createDpopProof(parEndpoint, "POST");
 
-    const resp = await fetch(parEndpoint, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "DPoP":          dpopProof,
-        },
-        body,
-    });
+        const resp = await fetch(parEndpoint, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "DPoP":          dpopProof,
+            },
+            body,
+        });
 
-    captureDpopNonce(resp);
+        captureDpopNonce(resp);
 
-    if (!resp.ok) {
+        if (resp.ok) {
+            const { request_uri } = await resp.json();
+            return request_uri;
+        }
+
         const err = await resp.json().catch(() => ({}));
+        if (attempt === 0 && err.error === "use_dpop_nonce") continue;
         throw new Error(err.error_description || `PAR request failed (HTTP ${resp.status}).`);
     }
-
-    const { request_uri } = await resp.json();
-    return request_uri;
 }
 
 function step06RedirectToAuthPage(authorizationEndpoint, requestUri) {
