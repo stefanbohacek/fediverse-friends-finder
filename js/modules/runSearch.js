@@ -5,8 +5,6 @@ import renderResults from "./renderResults.js";
 import { setLoadingStatus, setError } from "./UIHelpers.js";
 import { login, isLoggedIn } from "./oauth/login.js";
 
-const TEST_HANDLE = "stefanbohacek.online";
-
 const showSignInPrompt = (handle) => {
   const el = document.getElementById("signin-prompt");
   if (!el) return;
@@ -43,7 +41,7 @@ export default async (handle, { force = false } = {}) => {
       setLoadingStatus("Resolving handle…");
       const did = await resolveHandle(handle);
 
-      if (handle === TEST_HANDLE && !isLoggedIn() && await requiresAuth(did)) {
+      if (!isLoggedIn() && await requiresAuth(did)) {
         loadingSection.classList.add("d-none");
         showSignInPrompt(handle);
         return;
