@@ -162,6 +162,10 @@ a:focus {
   min-width: 0;
 }
 
+#user-nav {
+  z-index: 1030;
+}
+
 #download-alert {
   background-color: var(--hh-card-bg);
   border-color: var(--bs-border-color);
