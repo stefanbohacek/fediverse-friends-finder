@@ -74,11 +74,21 @@ export default async (
     ${cacheNote}
   `;
 
+  const summaryRow = document.getElementById("summary-row");
+  const noResultsCard = document.getElementById("no-results-card");
+  const accountsServersRow = document.getElementById("accounts-servers-row");
+
   const accountsList = document.getElementById("accounts-list");
   accountsList.innerHTML = "";
   if (fediverseAccounts.length === 0) {
-    accountsList.innerHTML = /* html */ `<p class="text-muted">No fediverse accounts found among your follows.</p>`;
+    summaryRow.classList.add("d-none");
+    noResultsCard.classList.remove("d-none");
+    noResultsCard.querySelector("p").innerHTML = /* html */ `None of the <strong>${totalFollows.toLocaleString()}</strong> accounts you follow in the Atmosphere have linked a fediverse profile yet.`;
+    accountsServersRow.classList.add("d-none");
   } else {
+    summaryRow.classList.remove("d-none");
+    noResultsCard.classList.add("d-none");
+    accountsServersRow.classList.remove("d-none");
     const frag = document.createDocumentFragment();
     for (const user of fediverseAccounts)
       frag.appendChild(buildUserCard(user, knownDomains));
