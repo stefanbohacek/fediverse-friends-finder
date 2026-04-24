@@ -244,7 +244,7 @@ export async function logout() {
                     "Authorization": `DPoP ${tokenData.access_token}`,
                     "DPoP":           dpopProof,
                 },
-                body: new URLSearchParams({ token: tokenData.access_token }).toString(),
+                body: new URLSearchParams({ token: tokenData.access_token, client_id: CLIENT_ID }).toString(),
             });
         } catch {}
     }
