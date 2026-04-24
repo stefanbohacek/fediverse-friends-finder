@@ -166,6 +166,12 @@ a:focus {
   z-index: 1030;
 }
 
+@media (max-width: 992px) {
+  #results-section {
+    scroll-margin-top: 4rem;
+  }
+}
+
 #download-alert {
   background-color: var(--hh-card-bg);
   border-color: var(--bs-border-color);
