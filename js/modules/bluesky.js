@@ -1,6 +1,14 @@
 import sleep from "./sleep.js";
+import { isLoggedIn, authenticatedFetch, LS } from "./oauth/login.js";
 
 const API_BASE = "https://public.api.bsky.app/xrpc";
+
+export class AuthRequiredError extends Error {
+  constructor() {
+    super("Authentication required to view this account's follows.");
+    this.name = "AuthRequiredError";
+  }
+}
 
 export const resolveHandle = async (handle) => {
   const resp = await fetch(
@@ -28,11 +36,23 @@ export const getFollowsCount = async (actor) => {
   return data.followsCount ?? null;
 };
 
+export const requiresAuth = async (actor) => {
+  const resp = await fetch(
+    `${API_BASE}/app.bsky.actor.getProfile?actor=${encodeURIComponent(actor)}`,
+  );
+  if (!resp.ok) return false;
+  const data = await resp.json();
+  return data.labels?.some((l) => l.val === "!no-unauthenticated") ?? false;
+};
+
 export const getAllFollows = async (actor, onProgress) => {
   const follows = [];
+  const authed  = isLoggedIn();
+  const pdsUrl  = authed && localStorage.getItem(LS.PDS_URL);
+  const base    = pdsUrl ? `${pdsUrl}/xrpc` : API_BASE;
   let cursor;
   do {
-    const url = new URL(`${API_BASE}/app.bsky.graph.getFollows`);
+    const url = new URL(`${base}/app.bsky.graph.getFollows`);
     url.searchParams.set("actor", actor);
     url.searchParams.set("limit", "100");
 
@@ -40,7 +60,9 @@ export const getAllFollows = async (actor, onProgress) => {
       url.searchParams.set("cursor", cursor);
     }
 
-    const resp = await fetch(url);
+    const resp = authed
+      ? await authenticatedFetch(url.toString())
+      : await fetch(url);
 
     if (!resp.ok) {
       throw new Error(`Failed to load follows (HTTP ${resp.status})`);

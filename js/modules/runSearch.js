@@ -1,8 +1,21 @@
-import { resolveHandle, getFollowsCount, getAllFollows } from "./bluesky.js";
+import { resolveHandle, getFollowsCount, getAllFollows, requiresAuth } from "./bluesky.js";
 import { loadCache, saveCache } from "./cache.js";
 import processFollows from "./processFollows.js";
 import renderResults from "./renderResults.js";
 import { setLoadingStatus, setError } from "./UIHelpers.js";
+import { login, isLoggedIn } from "./oauth/login.js";
+
+const TEST_HANDLE = "stefanbohacek.online";
+
+const showSignInPrompt = (handle) => {
+  const el = document.getElementById("signin-prompt");
+  if (!el) return;
+  el.classList.remove("d-none");
+  el.querySelector("button").onclick = () => {
+    el.classList.add("d-none");
+    login(handle);
+  };
+}
 
 export default async (handle, { force = false } = {}) => {
   const form = document.getElementById("find-form");
@@ -11,6 +24,7 @@ export default async (handle, { force = false } = {}) => {
   const userNav = document.getElementById("user-nav");
 
   setError(null);
+  document.getElementById("signin-prompt")?.classList.add("d-none");
   resultsSection.classList.add("d-none");
   userNav.classList.add("d-none");
   loadingSection.classList.remove("d-none");
@@ -28,6 +42,13 @@ export default async (handle, { force = false } = {}) => {
     } else {
       setLoadingStatus("Resolving handle…");
       const did = await resolveHandle(handle);
+
+      if (handle === TEST_HANDLE && !isLoggedIn() && await requiresAuth(did)) {
+        loadingSection.classList.add("d-none");
+        showSignInPrompt(handle);
+        return;
+      }
+
       const total = await getFollowsCount(did);
 
       setLoadingStatus("Fetching follows…");
