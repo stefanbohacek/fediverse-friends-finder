@@ -53,8 +53,11 @@ ready(async () => {
     }
   });
 
+  const heading = document.querySelector("h1");
+
   if (isLoggedIn()) {
     logoutLink.classList.remove("d-none");
+    heading.classList.add("mt-4");
   }
 
   refreshLink.addEventListener("click", (ev) => {
@@ -71,6 +74,7 @@ ready(async () => {
     await logout();
     clearAllCache();
     logoutLink.classList.add("d-none");
+    heading.classList.remove("mt-4");
     handleInput.value = "";
     document.getElementById("results-section").classList.add("d-none");
     document.getElementById("user-nav").classList.add("d-none");
