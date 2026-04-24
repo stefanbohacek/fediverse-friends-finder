@@ -32,3 +32,9 @@ export const saveCache = (handle, follows) => {
 export const clearCache = (handle) => {
   localStorage.removeItem(cacheKey(handle));
 };
+
+export const clearAllCache = () => {
+  Object.keys(localStorage)
+    .filter((k) => k.startsWith("fff:") && !k.startsWith("fff:oauth:"))
+    .forEach((k) => localStorage.removeItem(k));
+};

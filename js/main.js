@@ -1,5 +1,5 @@
 import ready from "./modules/ready.js";
-import { clearCache } from "./modules/cache.js";
+import { clearCache, clearAllCache } from "./modules/cache.js";
 import runSearch from "./modules/runSearch.js";
 import { normalizeHandle } from "./modules/utils.js";
 import { parseCallback } from "./modules/oauth/callback.js";
@@ -69,6 +69,11 @@ ready(async () => {
   logoutLink.addEventListener("click", async (ev) => {
     ev.preventDefault();
     await logout();
+    clearAllCache();
     logoutLink.classList.add("d-none");
+    handleInput.value = "";
+    document.getElementById("results-section").classList.add("d-none");
+    document.getElementById("user-nav").classList.add("d-none");
+    history.replaceState(null, "", window.location.pathname);
   });
 });
