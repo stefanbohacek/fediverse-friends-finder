@@ -6,7 +6,7 @@ export const setError = (message) => {
   const alert = document.getElementById("error-alert");
   if (message) {
     alert.textContent = message.includes("Invalid handle")
-      ? "Please make sure to use your full username, eg. username.bsky.app."
+      ? "Please make sure to use your full username, for example: username.bsky.app."
       : message;
     alert.classList.remove("d-none");
   } else {
