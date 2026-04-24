@@ -33,6 +33,7 @@ const SKIP_DOMAINS = [
   "pronouns.cc",
   "pronouns.page",
   "reddit.com",
+  "scrybe.to",
   "skeb.jp",
   "substack.com",
   "t.co",
