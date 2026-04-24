@@ -19,6 +19,7 @@ php -S localhost:8080
 # with Python 3
 python -m http.server
 ```
+
 ## Acknowledgements
 
 - Fediverse domain list was downloaded from [fedilist.com](https://fedilist.com/)
