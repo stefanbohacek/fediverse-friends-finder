@@ -24,24 +24,29 @@ export const resolveHandle = async (handle) => {
   return did;
 };
 
-export const getFollowsCount = async (actor) => {
+const getProfile = async (actor) => {
   const resp = await fetch(
     `${API_BASE}/app.bsky.actor.getProfile?actor=${encodeURIComponent(actor)}`,
   );
   if (!resp.ok) {
     return null;
   }
-  const data = await resp.json();
-  return data.followsCount ?? null;
+  return resp.json();
+};
+
+export const getFollowsCount = async (actor) => {
+  const data = await getProfile(actor);
+  return data?.followsCount ?? null;
+};
+
+export const getProfileDescription = async (actor) => {
+  const data = await getProfile(actor);
+  return data?.description ?? null;
 };
 
 export const requiresAuth = async (actor) => {
-  const resp = await fetch(
-    `${API_BASE}/app.bsky.actor.getProfile?actor=${encodeURIComponent(actor)}`,
-  );
-  if (!resp.ok) return false;
-  const data = await resp.json();
-  return data.labels?.some((l) => l.val === "!no-unauthenticated") ?? false;
+  const data = await getProfile(actor);
+  return data?.labels?.some((l) => l.val === "!no-unauthenticated") ?? false;
 };
 
 export const getAllFollows = async (actor, onProgress) => {
@@ -51,10 +56,14 @@ export const getAllFollows = async (actor, onProgress) => {
     const url = new URL(`${API_BASE}/app.bsky.graph.getFollows`);
     url.searchParams.set("actor", actor);
     url.searchParams.set("limit", "100");
-    if (cursor) url.searchParams.set("cursor", cursor);
+    if (cursor) {
+      url.searchParams.set("cursor", cursor);
+    }
 
     const resp = await fetch(url);
-    if (!resp.ok) throw new Error(`Failed to load follows (HTTP ${resp.status})`);
+    if (!resp.ok) {
+      throw new Error(`Failed to load follows (HTTP ${resp.status})`);
+    }
     const data = await resp.json();
 
     follows.push(...data.follows);

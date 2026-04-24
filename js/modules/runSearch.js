@@ -1,4 +1,9 @@
-import { resolveHandle, getFollowsCount, getAllFollows, requiresAuth } from "./bluesky.js";
+import {
+  resolveHandle,
+  getFollowsCount,
+  getAllFollows,
+  requiresAuth,
+} from "./bluesky.js";
 import { loadCache, saveCache } from "./cache.js";
 import processFollows from "./processFollows.js";
 import renderResults from "./renderResults.js";
@@ -13,7 +18,7 @@ const showSignInPrompt = (handle) => {
     el.classList.add("d-none");
     login(handle);
   };
-}
+};
 
 export default async (handle, { force = false } = {}) => {
   const form = document.getElementById("find-form");
@@ -41,7 +46,11 @@ export default async (handle, { force = false } = {}) => {
       setLoadingStatus("Resolving handle…");
       const did = await resolveHandle(handle);
 
-      if (window.location.hostname !== "localhost" && !isLoggedIn() && await requiresAuth(did)) {
+      if (
+        window.location.hostname !== "localhost" &&
+        !isLoggedIn() &&
+        (await requiresAuth(did))
+      ) {
         loadingSection.classList.add("d-none");
         showSignInPrompt(handle);
         return;
@@ -52,7 +61,9 @@ export default async (handle, { force = false } = {}) => {
       setLoadingStatus("Fetching follows…");
       follows = await getAllFollows(did, (n) => {
         const outOf = total ? ` out of ${total.toLocaleString()}` : "";
-        setLoadingStatus(`Fetching follows… (${n.toLocaleString()} loaded${outOf})`);
+        setLoadingStatus(
+          `Fetching follows… (${n.toLocaleString()} loaded${outOf})`,
+        );
       });
       saveCache(handle, follows);
     }
@@ -61,7 +72,7 @@ export default async (handle, { force = false } = {}) => {
     const results = processFollows(follows);
 
     loadingSection.classList.add("d-none");
-    await renderResults(follows.length, results, cachedAt);
+    await renderResults(follows.length, results, cachedAt, handle);
     resultsSection.classList.remove("d-none");
     userNav.classList.remove("d-none");
     resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });

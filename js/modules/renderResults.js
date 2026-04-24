@@ -1,6 +1,19 @@
 import { escapeHTML, truncate, timeAgo } from "./utils.js";
 import getFediverseDomains from "./fediverseDomains.js";
 import { downloadCSV } from "./downloadCSV.js";
+import { parseBio } from "./parseFediverseUsername.js";
+import { getProfileDescription } from "./bluesky.js";
+
+const detectServer = async (handle) => {
+  try {
+    const description = await getProfileDescription(handle);
+    const accounts = parseBio(description);
+    const nonBridged = accounts.find((a) => !a.bridged);
+    return nonBridged?.server ?? null;
+  } catch {
+    return null;
+  }
+};
 
 const avatarHtml = (src, alt, cls) => {
   if (src) {
@@ -62,6 +75,7 @@ export default async (
   totalFollows,
   { fediverseAccounts, serverCounts },
   cachedAt,
+  handle,
 ) => {
   const knownDomains = await getFediverseDomains();
   const cacheNote = cachedAt
@@ -83,7 +97,8 @@ export default async (
   if (fediverseAccounts.length === 0) {
     summaryRow.classList.add("d-none");
     noResultsCard.classList.remove("d-none");
-    noResultsCard.querySelector("p").innerHTML = /* html */ `None of the <strong>${totalFollows.toLocaleString()}</strong> accounts you follow in the Atmosphere have linked a fediverse profile yet.`;
+    noResultsCard.querySelector("p").innerHTML =
+      /* html */ `None of the <strong>${totalFollows.toLocaleString()}</strong> accounts you follow in the Atmosphere have linked a fediverse profile yet.`;
     accountsServersRow.classList.add("d-none");
   } else {
     summaryRow.classList.remove("d-none");
@@ -108,6 +123,9 @@ export default async (
 
   if (savedServer) {
     serverInput.value = savedServer;
+  } else {
+    const detected = handle ? await detectServer(handle) : null;
+    serverInput.value = detected ?? "mastodon.social";
   }
 
   const updateProfileLinks = () => {
@@ -118,9 +136,7 @@ export default async (
       const user = parts[1];
       const accountServer = parts[2];
       const path =
-        server === accountServer
-          ? `@${user}`
-          : a.dataset.fediverseHandle;
+        server === accountServer ? `@${user}` : a.dataset.fediverseHandle;
       a.href = `https://${server}/${path}`;
     });
   };
