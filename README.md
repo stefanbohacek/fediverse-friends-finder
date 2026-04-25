@@ -8,9 +8,7 @@ Learn more at [jointhefediverse.net](https://jointhefediverse.net/).
 
 ## Development
 
-This is a simple HTML+JS+CSS website with no dependencies and no build script.
-
-To run it locally, you can use the built-in local server in PHP, Python, or any other language that supports it.
+This is a simple HTML+JS+CSS website with no dependencies and no build script. To run this project locally, you can use the built-in local server in PHP, Python, or any other language that supports it.
 
 ```sh
 # with PHP
@@ -19,6 +17,8 @@ php -S localhost:8080
 # with Python 3
 python -m http.server
 ```
+
+Note that in local mode, logging in is skipped for accounts that encourage being logged in as the authentication flow relies on the site being reachable.
 
 ## Acknowledgements
 
