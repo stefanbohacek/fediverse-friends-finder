@@ -28,6 +28,7 @@ export default async (handle, { force = false } = {}) => {
 
   setError(null);
   document.getElementById("signin-prompt")?.classList.add("d-none");
+  document.getElementById("search-status").textContent = "";
   resultsSection.classList.add("d-none");
   userNav.classList.add("d-none");
   loadingSection.classList.remove("d-none");
@@ -75,6 +76,8 @@ export default async (handle, { force = false } = {}) => {
     await renderResults(follows.length, results, cachedAt, handle);
     resultsSection.classList.remove("d-none");
     userNav.classList.remove("d-none");
+    document.getElementById("search-status").textContent =
+      `Search complete. ${results.fediverseAccounts.length} fediverse account${results.fediverseAccounts.length === 1 ? "" : "s"} found.`;
     resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (err) {
     loadingSection.classList.add("d-none");

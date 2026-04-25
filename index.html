@@ -19,19 +19,17 @@
 </head>
 
 <body>
-  <nav id="user-nav"
-    class="d-none position-fixed top-0 end-0 m-3 bg-body border rounded shadow-sm px-3 py-2"
-    aria-label="Session actions">
-    <a href="#"
-      id="refresh-link"
-      class="nav-link p-0 small">Refresh</a>
-    <a href="#"
-      id="logout-link"
-      class="nav-link p-0 small d-none">Log out</a>
-  </nav>
+  <div id="user-nav"
+    class="d-none position-fixed top-0 end-0 m-3 bg-body border rounded shadow-sm px-3 py-2">
+    <button id="refresh-link"
+      class="btn btn-link p-0 small">Refresh</button>
+    <button id="logout-link"
+      class="btn btn-link p-0 small d-none">Log out</button>
+  </div>
 
   <main id="main"
     class="container py-5">
+    <p id="search-status" class="visually-hidden" aria-live="polite" aria-atomic="true"></p>
 
     <div class="row justify-content-center mb-5 mt-4 mt-lg-0">
       <div class="col-12 col-md-9 col-lg-7">
@@ -46,7 +44,6 @@
               id="handle-input"
               class="form-control"
               placeholder="username.bsky.social"
-              aria-label="Your Atmosphere handle"
               autocapitalize="off" />
             <button type="submit"
               class="btn btn-primary px-4"
@@ -77,7 +74,9 @@
           role="status"
           aria-label="Loading"></div>
         <p id="loading-status"
-          class="mb-0">Loading…</p>
+          class="mb-0"
+          aria-live="polite"
+          aria-atomic="true">Loading…</p>
       </div>
     </div>
 
@@ -90,7 +89,9 @@
           <div class="card">
             <div class="card-body">
               <p id="summary-text"
-                class="mb-0 fs-5"></p>
+                class="mb-0 fs-5"
+                aria-live="polite"
+                aria-atomic="true"></p>
             </div>
           </div>
         </div>
@@ -106,7 +107,7 @@
                 yet.</p>
               <a href="https://invite.jointhefediverse.net/?server=mastodon.social&amp;apps=1,2,3,5&amp;starterpacks=NjQ5,ODI5,OTIw,ODY4"
                 target="_blank"
-                class="btn btn-primary btn-lg">Join mastodon.social</a>
+                class="btn btn-primary btn-lg">Join mastodon.social<span class="visually-hidden"> (opens in new tab)</span></a>
             </div>
           </div>
         </div>
@@ -119,7 +120,7 @@
           <div class="d-flex align-items-center gap-3 mb-3">
             <h2 class="fw-bold mb-0">Fediverse accounts</h2>
             <button id="download-csv-btn"
-              class="btn btn-sm btn-outline-secondary d-none">Download</button>
+              class="btn btn-sm btn-outline-secondary d-none">Download CSV</button>
           </div>
           <label for="fediverse-server">
             Your server
@@ -133,7 +134,7 @@
               placeholder="mastodon.social"
               aria-describedby="server-info">
           </div>
-          <div class="form-text mt-0 mb-4">Profiles below will open from your server.</div>
+          <div class="form-text mt-0 mb-4" id="server-info">Profiles below will open from your server.</div>
           <div id="download-alert"
             class="alert alert-info d-none"
             role="alert">
@@ -155,7 +156,7 @@
         <div class="col-12 col-lg-11 mb-4 text-center">
           <a href="https://stefanbohacek.com/blog/how-to-join-mastodon-and-the-fediverse/"
             target="_blank"
-            class="btn btn-primary btn-lg">Get more tips on how to join Mastodon</a>
+            class="btn btn-primary btn-lg">Get more tips on how to join Mastodon<span class="visually-hidden"> (opens in new tab)</span></a>
         </div>
       </div>
     </div>

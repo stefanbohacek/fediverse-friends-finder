@@ -36,7 +36,7 @@ const buildUserCard = (user, knownDomains) => {
         ? "fediverse-badge"
         : "fediverse-badge-muted unknown-domain";
       const indicator =
-        known || a.bridged ? "" : ` <span aria-hidden="true">❓</span>`;
+        known || a.bridged ? "" : ` <span aria-hidden="true">❓</span><span class="visually-hidden"> (unrecognized server)</span>`;
       const bridge = a.bridged
         ? ` <span aria-label="bridge" title="Followable via bridge">🌉</span>`
         : "";
@@ -44,7 +44,7 @@ const buildUserCard = (user, knownDomains) => {
         <a href="${escapeHTML(a.url)}"
           data-fediverse-handle="${escapeHTML(a.fullHandle)}"
           target="_blank" rel="noopener noreferrer"
-          class="${cls} badge rounded-pill me-1 mb-1 text-wrap text-break">${escapeHTML(a.fullHandle)}${bridge}${indicator}</a>
+          class="${cls} badge rounded-pill me-1 mb-1 text-wrap text-break">${escapeHTML(a.fullHandle)}${bridge}${indicator}<span class="visually-hidden"> (opens in new tab)</span></a>
       `;
     })
     .join("");
@@ -60,7 +60,7 @@ const buildUserCard = (user, knownDomains) => {
         <div class="d-flex flex-wrap align-items-baseline gap-2 mb-1">
           <strong>${escapeHTML(user.displayName || user.handle)}</strong>
           <a href="https://bsky.app/profile/${escapeHTML(user.handle)}" target="_blank"
-            rel="noopener noreferrer" class="small link-secondary text-break">@${escapeHTML(user.handle)}</a>
+            rel="noopener noreferrer" class="small link-secondary text-break">@${escapeHTML(user.handle)}<span class="visually-hidden"> (opens in new tab)</span></a>
         </div>
         <div class="mb-1">${profileLinks}</div>
         ${bio}
@@ -165,7 +165,7 @@ export default async (
       row.className = `d-flex justify-content-between align-items-center mb-2${known ? "" : " unknown-domain"}`;
       row.innerHTML = /* html */ `
         <a href="https://${escapeHTML(server)}" target="_blank" rel="noopener noreferrer"
-          class="text-break me-2">${escapeHTML(server)}${known ? "" : ` <span aria-hidden="true">❓</span>`}</a>
+          class="text-break me-2">${escapeHTML(server)}${known ? "" : ` <span aria-hidden="true">❓</span><span class="visually-hidden"> (unrecognized server)</span>`}<span class="visually-hidden"> (opens in new tab)</span></a>
         <span class="badge server-badge rounded-pill">${count}</span>
       `;
       frag.appendChild(row);
