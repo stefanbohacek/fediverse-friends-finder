@@ -110,6 +110,15 @@ a:focus {
   color: var(--hh-card-bg);
 }
 
+.btn-outline-primary {
+  --bs-btn-color: var(--hh-accent);
+  --bs-btn-border-color: var(--hh-accent);
+  --bs-btn-hover-bg: var(--hh-accent);
+  --bs-btn-hover-border-color: var(--hh-accent);
+  --bs-btn-active-bg: var(--hh-accent);
+  --bs-btn-active-border-color: var(--hh-accent);
+}
+
 .at-prefix {
   background-color: var(--hh-card-bg);
   border-color: var(--bs-border-color);
