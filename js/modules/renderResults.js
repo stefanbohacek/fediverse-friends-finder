@@ -3,6 +3,7 @@ import getFediverseDomains from "./fediverseDomains.js";
 import { downloadCSV } from "./downloadCSV.js";
 import { parseBio } from "./parseFediverseUsername.js";
 import { getProfileDescription } from "./bluesky.js";
+import isMastodonServer from "./isMastodonServer.js";
 
 const detectServer = async (handle) => {
   try {
@@ -36,7 +37,9 @@ const buildUserCard = (user, knownDomains) => {
         ? "fediverse-badge"
         : "fediverse-badge-muted unknown-domain";
       const indicator =
-        known || a.bridged ? "" : ` <span aria-hidden="true">❓</span><span class="visually-hidden"> (unrecognized server)</span>`;
+        known || a.bridged
+          ? ""
+          : ` <span aria-hidden="true">❓</span><span class="visually-hidden"> (unrecognized server)</span>`;
       const bridge = a.bridged
         ? ` <span aria-label="bridge" title="Followable via bridge">🌉</span>`
         : "";
@@ -121,36 +124,56 @@ export default async (
   const serverInput = document.getElementById("fediverse-server");
   const savedServer = localStorage.getItem("fediverseServer");
 
+  let userServerDetected = false;
+  let userServerPlatform = "";
   if (savedServer) {
     serverInput.value = savedServer;
+    userServerDetected = true;
+    userServerPlatform = localStorage.getItem("fediverseServerPlatform") ?? "";
   } else {
     const detected = handle ? await detectServer(handle) : null;
-    serverInput.value = detected ?? "mastodon.social";
+    if (detected) {
+      serverInput.value = detected;
+      userServerDetected = true;
+    } else {
+      serverInput.value = "mastodon.social";
+    }
   }
 
-  const updateProfileLinks = () => {
-    const server =
-      serverInput.value.trim().replace(/\/+$/, "") || "mastodon.social";
+  const updateProfileLinks = async () => {
+    const server = serverInput.value.trim().replace(/\/+$/, "");
+    if (userServerDetected && server && !userServerPlatform) {
+      userServerPlatform = (await isMastodonServer(server))
+        ? "mastodon"
+        : "other";
+      localStorage.setItem("fediverseServerPlatform", userServerPlatform);
+    }
+    const userServerIsMastodon = userServerPlatform === "mastodon";
     document.querySelectorAll("a[data-fediverse-handle]").forEach((a) => {
       const parts = a.dataset.fediverseHandle.split("@");
       const user = parts[1];
       const accountServer = parts[2];
-      const path =
-        server === accountServer ? `@${user}` : a.dataset.fediverseHandle;
-      a.href = `https://${server}/${path}`;
+      if (userServerDetected && server === accountServer) {
+        a.href = `https://${server}/@${user}`;
+      } else if (userServerIsMastodon) {
+        a.href = `https://${server}/authorize_interaction?uri=https://${accountServer}/@${user}`;
+      } else {
+        a.href = `https://${accountServer}/@${user}`;
+      }
     });
   };
 
   serverInput.addEventListener("input", () => {
     serverInput.value = serverInput.value.replace(/^https?:\/\//i, "");
-    localStorage.setItem(
-      "fediverseServer",
-      serverInput.value.trim().replace(/\/+$/, ""),
-    );
-    updateProfileLinks();
+    const trimmed = serverInput.value.trim().replace(/\/+$/, "");
+    userServerDetected = trimmed.length > 0;
+    userServerPlatform = "";
+    localStorage.setItem("fediverseServer", trimmed);
+    localStorage.setItem("fediverseServerPlatform", "");
+    void updateProfileLinks();
   });
 
-  updateProfileLinks();
+  await updateProfileLinks();
 
   const serversList = document.getElementById("servers-list");
   serversList.innerHTML = "";

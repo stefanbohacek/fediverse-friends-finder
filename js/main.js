@@ -53,12 +53,7 @@ ready(async () => {
     }
   });
 
-  const heading = document.querySelector("h1");
-
-  if (isLoggedIn()) {
-    logoutLink.classList.remove("d-none");
-    heading.classList.add("mt-4");
-  }
+  logoutLink.textContent = isLoggedIn() ? "Log out" : "Clear";
 
   refreshLink.addEventListener("click", (ev) => {
     ev.preventDefault();
@@ -71,10 +66,11 @@ ready(async () => {
 
   logoutLink.addEventListener("click", async (ev) => {
     ev.preventDefault();
-    await logout();
+    if (isLoggedIn()) {
+      await logout();
+    }
     clearAllCache();
-    logoutLink.classList.add("d-none");
-    heading.classList.remove("mt-4");
+    logoutLink.textContent = "Clear";
     handleInput.value = "";
     document.getElementById("results-section").classList.add("d-none");
     document.getElementById("user-nav").classList.add("d-none");
